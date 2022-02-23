@@ -1,0 +1,122 @@
+Starry night
+
+Observations
+
+	Buildings
+		Random width (in rooms)
+		Random height (in floors)
+		Random floor height and gap
+		Random window width and gap
+		"Background" buildings are shorter, thinner, dimmer yellow, and have smaller windows
+			It might be that they're built from smaller room layouts
+		Tallest one gets aircraft warning light (aka "Flasher")
+			Blinks red on and off, since beginning of screensaver
+		I am not doing the circular buildings, they are bullshit
+
+	Star spawning
+		Random positions, more up top than at the bottom
+		"Random colors" — reuse star color picker from starfield
+		Obstructed by buildings
+
+	Window lighting
+		Randomly appear, less frequently randomly disappear
+		Closer buildings block farther away buildings
+
+	Meteor
+		is a fast, infrequent animation
+		A line segment moving along its line, at a shallow angle (13/9)
+		Blocked by buildings
+
+Research
+- What were all its versions like?
+
+- Who made it and why?
+
+- What's its source code like?
+	https://jamessignorile.com/program.html
+	Note: https://www.bryanbraun.com/after-dark-css/ doesn't include starry night
+		Probably hard to achieve in pure CSS!
+
+Analyze screenshots and video capture for statistical info
+	Count the stars in the sky
+	What are all the colors of all the stars?
+	What is every type of building?
+	Are the stars visible through the buildings?
+	Are buildings visible through other buildings?
+	How many building layers are there?
+	What do the meteors look like?
+
+What makes a starry night?
+	No moon
+	Clear sky
+	Enough stars to detect the dark ground below
+
+Understanding the skyline
+	Slowly lights up at night
+		These buildings can't all be residential
+
+What makes starry night nostalgic?
+	The simplicity
+	A city skyline slowly lighting up
+	The characteristics of CRT
+
+What makes sky photography beautiful?
+	Circles around Polaris
+	Dusk
+	Silhouetted landscape
+	Milky Way?
+
+Brainstorming
+	Rotate sky very very slowly
+		Move one star at a time
+	Buildings, trees, hills, mountains?
+	Hint of Milky Way?
+	Choice of city would be interesting
+		People could submit cities
+		Building templates
+	Build skyline in "3D" and rotate it at an imperceptibly slow speed
+		Parallax
+	Water reflection?
+	Kenmore Square CITGO sign easter egg?
+
+	Hillside (silhouette, with aircraft warning light on peak)
+	Morse secret in skyline
+	Morse secret in sky
+
+	Give buildings front and side
+		Project from city grid, viewed from the side
+
+	Curtain Wall buildings
+		Curtain wall buildings have larger windows and smaller gaps
+		Curtain wall buildings' floors are typically all lit or all not lit, all night
+	Masonry buildings
+		larger gaps
+
+	Residential highrise
+		3-5 identical background buildings of either above type
+		But windows are individually lit, maybe different colors
+			Large % of windows go out as night progresses
+
+Technique
+	Multiple canvases, with "glow" canvases on top
+		Individual control of resolution, position and glow
+		Sky
+			Dusk?
+			Stars
+			Meteors
+		Each Building
+			Silhouette
+			Lights
+			Light glow
+			Underlit slightly by streetlights?
+	Randomization of buildings
+		Represent all the buildings someplace
+	Faithful reproduction?
+		Triangular and circular buildings
+		Random color stars
+		Not really into it actually
+	Choice of resolution
+		Add fractional resolution options on retina displays
+
+
+Spotify playlist
