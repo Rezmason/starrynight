@@ -15,7 +15,7 @@ Observations
 
 	Star spawning
 		Random positions, more up top than at the bottom
-		"Random colors" — reuse star color picker from starfield
+		Seem to be random colors
 		Obstructed by buildings
 
 	Window lighting
@@ -67,6 +67,11 @@ What makes sky photography beautiful?
 	Milky Way?
 
 Brainstorming
+	Random stars
+		Reuse star color picker from starfield project
+	Familiar stars
+		Use actual data from someplace?
+
 	Rotate sky very very slowly
 		Move one star at a time
 	Buildings, trees, hills, mountains?
