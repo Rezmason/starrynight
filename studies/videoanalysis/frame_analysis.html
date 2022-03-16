@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<style type="text/css">
+
+			html, body {
+				margin: 0;
+			}
+
+			image, img {
+				display: none;
+				/*width: 25%;*/
+			}
+
+			canvas {
+				/*width: 25%;*/
+				image-rendering: pixelated;
+			}
+		</style>
+	</head>
+
+	<body>
+		<img src="./screencap/no_buildings/color_stars.png">
+		<canvas>
+		</canvas>
+		<span id="counter"></span>
+		<span id="result"></span>
+		<script>
+			const image = document.querySelector("img");
+			const canvas = document.querySelector("canvas");
+			const counter = document.querySelector("#counter");
+			const result = document.querySelector("#result");
+			const context = canvas.getContext("2d");
+
+			// const colors = new Set();
+			const colors = [];
+
+			image.onload = () => {
+				const width = image.width;
+				const height = image.height;
+
+				[canvas.width, canvas.height] = [width, height];
+
+				context.drawImage(image, 0, 0);
+
+				const imageData = context.getImageData(0, 0, width, height);
+				const pixels = imageData.data;
+
+				for (let y = 0; y < height; y++) {
+					for (let x = 0; x < width; x++) {
+						const index = (y * width + x) * 4;
+						const [r, g, b] = [
+							pixels[index + 0],
+							pixels[index + 1],
+							pixels[index + 2]
+						];
+						if (r + g + b > 0) {
+							colors.push({
+								fill:`#${
+									r.toString(16).padStart(2, "0")
+								}${
+									g.toString(16).padStart(2, "0")
+								}${
+									b.toString(16).padStart(2, "0")
+								}`,
+								r,
+								g,
+								b
+							});
+						}
+					}
+				}
+
+				context.fillStyle = "black";
+				context.fillRect(0, 0, width, height);
+
+				for (const color of colors) {
+					context.fillStyle = color.fill;
+
+					const blueIndex = (color.b >> 4);
+					const blueRow = blueIndex % 4;
+					const blueColumn = Math.floor(blueIndex / 4);
+
+					context.fillRect(color.r + blueColumn * 256, color.g + blueRow * 256, 32, 32);
+				}
+			};
+
+		</script>
+	</body>
+</html>

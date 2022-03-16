@@ -1,0 +1,39 @@
+Notes on the original screensavers
+
+ordinary stars
+	Position
+		Their x position is purely random
+		On a 512 x 342 screen, their y position is quadratically eased in (1 - sqrt(random))
+	0.215 stars are added per frame
+	0.0126 random stars are removed per frame per one star present
+	star colors can be any RGB combination
+shooting stars
+	bright red
+	They are "comet shaped"
+		Probably a sprite sheet
+		3 pixel radius
+	They always fall left/right and down
+		Slope of 14 x to 10 y
+		Random start position
+		On a 512x342 screen, they always start at the top
+			On larger screens, this doesn't seem to be the case
+	They occur randomly
+		Seems like the delay between any two shooting stars is eased in but never more than 3.5 seconds
+			min(floor(1 - pow(random(), 0.2) * 5000), 3500)
+		Only one at a time
+		They last 18 frames
+buildings
+	At first, this was only in Starry Skylines
+	Flasher on tallest
+	Black silhouette with windows drawn on top
+	Older versions: all windows are same color
+		What color is that?
+		Building height based on a percent-of-the-screen, plus a random offset
+		Buildings can overlap; the building in the front occludes the one in the back
+		Random x position
+		Random floor height, window x offset, and floor padding
+		windows were single pixels, winking on and off like the stars
+	Newer versions dim the background buildings
+		What colors are their windows?
+		Windows can now be multiple pixels tall
+		Buildings can be circular or triangular too, but no thanks

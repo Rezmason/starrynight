@@ -1,0 +1,72 @@
+<html>
+<head>
+  <style>
+    html, body {
+      margin: 0;
+      background: #222;
+    }
+
+    #scene canvas {
+      width: 100%;
+      position: absolute;
+      image-rendering: pixelated;
+    }
+
+    canvas#base {
+    /*   display: none; */
+    }
+
+    canvas#glow {
+      mix-blend-mode: screen;
+      filter: blur(5px) brightness(200%);
+    }
+  </style>
+</head>
+<body>
+  <div id="scene">
+    <canvas id="base"></canvas>
+    <canvas id="glow"></canvas>
+  </div>
+  <script>
+    console.clear();
+
+    const makeLayer = (id) => {
+      const canvas = document.querySelector(`canvas#${id}`);
+      const context = canvas.getContext("2d");
+      return { canvas, context };
+    }
+
+    const resizeLayer = (layer, width, height) => {
+      layer.canvas.width = width;
+      layer.canvas.height = height;
+    }
+
+    const baseLayer = makeLayer("base");
+    const glowLayer = makeLayer("glow");
+
+    const [width, height] = [512, 342];
+
+    resizeLayer(baseLayer, width, height);
+    resizeLayer(glowLayer, width, height);
+
+    const imageData = baseLayer.context.createImageData(width, height);
+    const pixels = new Uint32Array(imageData.data.buffer);
+    pixels.fill(0xFF000000);
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        if (Math.random() > 0.015 * (height - y) / height) {
+          continue;
+        }
+        const color = 0xFF000000 | Math.floor(Math.random() * 0xFFFFFF);
+        const index = y * width + x;
+        pixels[index] = color;//0xffffffff;
+      }
+    }
+
+    baseLayer.context.putImageData(imageData, 0, 0);
+    glowLayer.context.putImageData(imageData, 0, 0);
+  </script>
+</body>
+</html>
+

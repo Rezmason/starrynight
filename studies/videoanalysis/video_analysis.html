@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<style type="text/css">
+
+			html, body {
+				margin: 0;
+			}
+
+			video {
+				width: 50%;
+			}
+
+			span.output {
+				display: inline-block;
+				background: white;
+				border: 1em solid black;
+				padding: 1em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<video controls preload="auto" autoplay>
+			<source src="./screencap/no_buildings/1024_Maxx_long.mov" type="video/mp4">
+		</video>
+		<script>
+			const video = document.querySelector("video");
+			const canvas = document.createElement("canvas");
+			const context = canvas.getContext("2d");
+
+			const frameStats = [];
+			const allStars = [];
+			const currentStars = {};
+
+			const makeResultButton = (name, data) => {
+				const button = document.createElement("span");
+				button.className = "output";
+				button.innerText = name;
+				button.onclick = () => {
+					const a = document.createElement("a");
+					const file = new Blob([data], {type: "text/plain"});
+					a.href = URL.createObjectURL(file);
+					a.download = name + ".json";
+					a.click();
+					URL.revokeObjectURL(a.href);
+				};
+				document.body.append(button);
+			}
+
+			const processData = (width, height, totalFrames) => {
+				const rows = Array(height).fill(0);
+				for (const star of allStars) {
+					rows[star.y]++;
+				}
+				makeResultButton("star y position histogram", JSON.stringify(rows));
+
+				const starAges = [];
+				for (const star of allStars) {
+					if (star.age != null) {
+						if (starAges[star.age] == null) {
+							starAges[star.age] = 0;
+						}
+						starAges[star.age]++;
+					}
+				}
+				makeResultButton("star age histogram", JSON.stringify(starAges));
+
+				const population = [];
+				let count = 0;
+				for (const frame of frameStats) {
+					count += frame.delta;
+					population.push(`${frame.frame},${frame.delta},${count}`);
+				}
+				makeResultButton("population", population.join("\n"));
+
+				makeResultButton("all stars", JSON.stringify(allStars));
+
+				makeResultButton("frame stats", JSON.stringify(frameStats));
+			};
+
+			const collectData = (width, height, frame, pixels) => {
+				const added = [], removed = [];
+				for (let y = 0; y < height; y++) {
+					for (let x = 0; x < width; x++) {
+						const index = (y * width + x) * 4;
+						let star = currentStars[index];
+						if (pixels[index + 0] == 0xFF) {
+							if (star == null) {
+								star = {x, y, index, start: frame};
+								currentStars[index] = star;
+								allStars.push(star);
+								added.push(star);
+							}
+						} else {
+							if (star != null) {
+								star.end = frame;
+								star.age = frame - star.start;
+								currentStars[index] = null;
+								removed.push(star);
+							}
+						}
+					}
+				}
+				if (added.length + removed.length > 0) {
+					frameStats.push({
+						frame,
+						added,
+						removed,
+						numAdded: added.length,
+						numRemoved: removed.length,
+						delta: added.length - removed.length,
+						total: currentStars.size
+					});
+				}
+			};
+
+			video.onplay = () => {
+				const width = video.videoWidth;
+				const height = video.videoHeight;
+
+				[canvas.width, canvas.height] = [width, height];
+
+				let frame = 0;
+				const f = () => {
+					if (video.ended) {
+						processData(width, height, frame);
+					} else if (!video.paused) {
+						context.drawImage(video, 0, 0);
+						collectData(width, height, frame, context.getImageData(0, 0, width, height).data);
+						frame++;
+						requestAnimationFrame(f);
+					}
+				};
+				f();
+			};
+		</script>
+	</body>
+</html>
