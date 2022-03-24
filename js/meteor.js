@@ -2,6 +2,9 @@ import { milliseconds, frames } from "./utils.js";
 import Layer from "./layer.js";
 
 export default async (scene, width, height) => {
+	const meteor = new Layer("meteor");
+	scene.appendChild(meteor.element);
+	
 	const [numColumns, numRows] = [4, 3];
 	const numFrames = numColumns * numRows;
 	const spritesheet = new Image();
@@ -28,10 +31,8 @@ export default async (scene, width, height) => {
 		}
 	}
 
-	const meteor = new Layer("meteor");
 	meteor.setSize(meteorWidth, meteorHeight);
 	meteor.setGlow(0.5);
-	scene.appendChild(meteor.element);
 	meteor.setVisible(false);
 
 	while (true) {
