@@ -15,7 +15,8 @@ scene, scene layer {
 }
 
 scene {
-	--unit: 0.1vmin;
+	/*--unit: 0.1vmin;*/
+	--unit: 0.1em;
 	background: black;
 	position: relative;
 	/*overflow: hidden;*/
