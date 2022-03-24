@@ -15,6 +15,7 @@ export default class Layer {
 		this.element.appendChild(this.glowCanvas);
 
 		this.setVisible(true);
+		this.setGlow(1);
 	}
 
 	setSize(width, height) {
@@ -35,5 +36,10 @@ export default class Layer {
 		this.style.setProperty("--x", x);
 		this.style.setProperty("--y", y);
 		this.style.setProperty("--flip", flip);
+	}
+
+	setGlow(amount) {
+		this.glow = amount;
+		this.glowCanvas.style.setProperty("--glow", amount);
 	}
 };

@@ -49,7 +49,7 @@ scene canvas:not(.glow) {
 
 scene canvas.glow {
 	mix-blend-mode: screen;
-	filter: blur(5px) brightness(200%);
+	filter: blur(5px) brightness(calc(100% * var(--glow)));
 }
 
 

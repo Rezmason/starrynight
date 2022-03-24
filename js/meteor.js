@@ -30,6 +30,7 @@ export default async (scene, width, height) => {
 
 	const meteor = new Layer("meteor");
 	meteor.setSize(meteorWidth, meteorHeight);
+	meteor.setGlow(0.5);
 	scene.appendChild(meteor.element);
 	meteor.setVisible(false);
 
