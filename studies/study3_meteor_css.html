@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+	<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+			background: #222;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		scene, layer {
+			display: block;
+			overflow: hidden;
+			width: calc(var(--width) * var(--unit));
+			height: calc(var(--height) * var(--unit));
+		}
+
+		scene {
+			--unit: 0.1vh;
+			position: relative;
+			background: black;
+		}
+
+		layer {
+			position: absolute;
+			transform:
+				translate(
+					calc(var(--x) * var(--unit)),
+					calc(var(--y) * var(--unit))
+				)
+				scale(
+					var(--flipX),
+					1
+				);
+		}
+
+		layer canvas {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			image-rendering: pixelated;
+		}
+
+		layer canvas.layer-glow {
+			mix-blend-mode: screen;
+			filter: blur(5px) brightness(200%);
+		}
+
+		layer.hidden {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<scene></scene>
+	<script type="module">
+
+		console.clear();
+
+		const asyncDelay = (amount) => new Promise(resolve => setTimeout(resolve, amount));
+
+		const frames = (count) => new Promise(resolve => {
+			const f = (t) => {
+				if (count === 0) {
+					resolve(t);
+				} else {
+					count--;
+					requestAnimationFrame(f);
+				}
+			}
+			f();
+		});
+
+		class Layer {
+			constructor(id) {
+				this.id = id;
+				this.element = document.createElement("layer");
+				this.element.id = id;
+
+				this.canvas = document.createElement("canvas");
+				this.context = this.canvas.getContext("2d");
+				this.element.append(this.canvas);
+
+				this.glowCanvas = document.createElement("canvas");
+				this.glowCanvas.classList.add("layer-glow");
+				this.glowContext = this.glowCanvas.getContext("2d");
+				this.element.append(this.glowCanvas);
+			}
+
+			setSize(width, height) {
+				this.element.style.setProperty("--width", width);
+				this.element.style.setProperty("--height", height);
+				this.canvas.width = width;
+				this.canvas.height = height;
+				this.glowCanvas.width = width;
+				this.glowCanvas.height = height;
+			}
+
+			copyToGlow() {
+				this.glowContext.clearRect(0, 0, this.glowCanvas.width, this.glowCanvas.height);
+				this.glowContext.drawImage(this.canvas, 0, 0);
+			}
+
+			setVisible(value) {
+				this.element.classList.toggle("hidden", !value);
+			}
+		}
+
+		const [width, height] = [800, 600];
+
+		const scene = document.querySelector("scene");
+		scene.style.setProperty("--width", width);
+		scene.style.setProperty("--height", height);
+
+		(async () => {
+
+			const meteorSpritesheet = new Image();
+			meteorSpritesheet.crossOrigin = "Anonymous";
+			meteorSpritesheet.src = "meteor_4x3.png";
+			await meteorSpritesheet.decode();
+
+			const [numColumns, numRows] = [4, 3];
+			const numFrames = numColumns * numRows;
+
+			const meteorWidth = meteorSpritesheet.width   / numColumns;
+			const meteorHeight = meteorSpritesheet.height / numRows;
+
+			const meteorFrames = [];
+			for (let row = 0; row < numRows; row++) {
+				for (let column = 0; column < numColumns; column++) {
+					const frame = document.createElement("canvas");
+					frame.width = meteorWidth;
+					frame.height = meteorHeight;
+					const ctx = frame.getContext("2d");
+					ctx.fillStyle = "red";
+					ctx.fillRect(0, 0, meteorWidth, meteorHeight);
+					ctx.globalCompositeOperation = "destination-atop";
+					ctx.drawImage(
+						meteorSpritesheet,
+						meteorWidth * column,
+						meteorHeight * row,
+						meteorWidth,
+						meteorHeight,
+						0,
+						0,
+						meteorWidth,
+						meteorHeight
+					);
+					meteorFrames.push(ctx.getImageData(0, 0, meteorWidth, meteorHeight));
+				}
+			}
+
+			const meteor = new Layer("meteor");
+			meteor.setVisible(false);
+			meteor.setSize(meteorWidth, meteorHeight);
+			scene.append(meteor.element);
+
+			const renderMeteor = (x, y, flipX) => {
+				meteor.element.style.setProperty("--flipX", flipX);
+				meteor.element.style.setProperty("--x", x);
+				meteor.element.style.setProperty("--y", y);
+				const randomFrame = Math.floor(Math.random() * numFrames);
+				meteor.context.putImageData(meteorFrames[randomFrame], 0, 0);
+				meteor.glowContext.putImageData(meteorFrames[randomFrame], 0, 0);
+			}
+
+			const animateMeteor = async () => {
+				while(true) {
+					const delay = Math.min(
+						Math.floor((1 - Math.pow(Math.random(), 0.2)) * 5000),
+						3500
+					);
+					await asyncDelay(delay);
+					let x = Math.floor(Math.random() * width);
+					let y = Math.floor(Math.random() * height * 0.25);
+					let flipX = Math.random() < 0.5 ? -1 : 1;
+					meteor.setVisible(true);
+					for (let i = 0; i < 18; i++) {
+						await frames(1);
+						x += 14 * flipX;
+						y += 10;
+						renderMeteor(x, y, flipX);
+					}
+					meteor.setVisible(false);
+				}
+			};
+
+			animateMeteor();
+		})();
+	</script>
+</body>
+</html>
+

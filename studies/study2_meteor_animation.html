@@ -1,0 +1,157 @@
+<html>
+<head>
+	<style>
+		html, body {
+			margin: 0;
+			background: #222;
+		}
+
+		#scene canvas {
+			width: 100%;
+			position: absolute;
+			image-rendering: pixelated;
+		}
+
+		canvas#base {
+		/*   display: none; */
+		}
+
+		canvas#glow {
+			mix-blend-mode: screen;
+			filter: blur(5px) brightness(200%);
+		}
+	</style>
+</head>
+<body>
+	<div id="scene">
+		<canvas id="base"></canvas>
+		<canvas id="glow"></canvas>
+	</div>
+	<script>
+
+		const asyncDelay = (amount) => new Promise(resolve => setTimeout(resolve, amount));
+
+		const asyncAnimationFrame = (count) => new Promise(resolve => {
+			const f = () => {
+				if (count === 0) {
+					resolve();
+				} else {
+					count--;
+					requestAnimationFrame(f);
+				}
+			}
+			f();
+		});
+
+		(async () => {
+			console.clear();
+
+			const makeLayer = (id) => {
+				const canvas = document.querySelector(`canvas#${id}`);
+				const context = canvas.getContext("2d");
+				return { canvas, context };
+			}
+
+			const resizeLayer = (layer, width, height) => {
+				layer.canvas.width = width;
+				layer.canvas.height = height;
+			}
+
+			const baseLayer = makeLayer("base");
+			const glowLayer = makeLayer("glow");
+
+			const [width, height] = [512, 342];
+
+			resizeLayer(baseLayer, width, height);
+			resizeLayer(glowLayer, width, height);
+
+			const meteorSpritesheet = new Image();
+			meteorSpritesheet.crossOrigin = "Anonymous";
+			meteorSpritesheet.src = "meteor_4x3.png";
+			await meteorSpritesheet.decode();
+
+			const [numColumns, numRows] = [4, 3];
+			const numFrames = numColumns * numRows;
+
+			const meteorWidth = meteorSpritesheet.width   / numColumns;
+			const meteorHeight = meteorSpritesheet.height / numRows;
+
+			const meteorFrames = [];
+			for (let row = 0; row < numRows; row++) {
+				for (let column = 0; column < numColumns; column++) {
+					const frame = document.createElement("canvas");
+					frame.width = meteorWidth;
+					frame.height = meteorHeight;
+					const ctx = frame.getContext("2d");
+					ctx.fillStyle = "red";
+					ctx.fillRect(0, 0, meteorWidth, meteorHeight);
+					ctx.globalCompositeOperation = "destination-atop";
+					ctx.drawImage(
+						meteorSpritesheet,
+						meteorWidth * column,
+						meteorHeight * row,
+						meteorWidth,
+						meteorHeight,
+						0,
+						0,
+						meteorWidth,
+						meteorHeight
+					);
+					meteorFrames.push(frame);
+				}
+			}
+
+			let dx = 0;
+			let dy = 0;
+			let direction = 1;
+
+			const copyToGlow = () => {
+				glowLayer.context.clearRect(0, 0, width, height);
+				glowLayer.context.drawImage(baseLayer.canvas, 0, 0);
+			};
+
+			const renderMeteor = (clear = false) => {
+				baseLayer.context.save();
+				if (direction === -1) {
+					baseLayer.context.translate(width, 0);
+					baseLayer.context.scale(-1, 1);
+				}
+
+				baseLayer.context.translate(dx, dy);
+				baseLayer.context.clearRect(0, 0, meteorWidth, meteorHeight);
+
+				if (!clear) {
+					const meteorFrame = meteorFrames[Math.floor(Math.random() * numFrames)];
+					dx += 14;
+					dy += 10;
+					baseLayer.context.translate(14, 10);
+					baseLayer.context.drawImage(meteorFrame, 0, 0);
+				}
+				baseLayer.context.restore();
+				copyToGlow();
+			}
+
+			const animateMeteor = async () => {
+				while(true) { // Whoa, weird!
+					const delay = Math.min(
+						Math.floor((1 - Math.pow(Math.random(), 0.2)) * 5000),
+						3500
+					);
+					await asyncDelay(delay);
+					dx = Math.floor(Math.random() * width);
+					dy = Math.floor(Math.random() * height * 0.125);
+					direction = Math.random() < 0.5 ? -1 : 1;
+					for (let i = 0; i < 18; i++) {
+						renderMeteor();
+						await asyncAnimationFrame(1);
+					}
+					renderMeteor(true);
+				}
+			};
+
+			animateMeteor();
+		})();
+	</script>
+</body>
+</html>
+

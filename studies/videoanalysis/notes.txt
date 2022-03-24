@@ -7,6 +7,7 @@ ordinary stars
 	0.215 stars are added per frame
 	0.0126 random stars are removed per frame per one star present
 	star colors can be any RGB combination
+		In 256 color mode, they are random colors from the Mac OS color palette
 shooting stars
 	bright red
 	They are "comet shaped"
@@ -35,5 +36,8 @@ buildings
 		windows were single pixels, winking on and off like the stars
 	Newer versions dim the background buildings
 		What colors are their windows?
+			256 color mode: #FFFF00
+			Old: #FCF305
+			Shades of yellow depending on background color
 		Windows can now be multiple pixels tall
 		Buildings can be circular or triangular too, but no thanks
