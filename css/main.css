@@ -9,10 +9,13 @@ html, body {
 	justify-content: center;
 }
 
+scene, scene layer {
+	width:  calc(var(--width) * var(--unit));
+	height: calc(var(--height) * var(--unit));
+}
+
 scene {
 	--unit: 0.1vmin;
-	width:  calc(800 * var(--unit));
-	height: calc(600 * var(--unit));
 	background: black;
 	position: relative;
 	/*overflow: hidden;*/
@@ -20,8 +23,6 @@ scene {
 
 scene layer {
 	position: absolute;
-	width:  calc(var(--width) * var(--unit));
-	height: calc(var(--height) * var(--unit));
 }
 
 scene canvas {
@@ -32,6 +33,7 @@ scene canvas {
 }
 
 scene canvas:not(.glow) {
+	box-sizing: border-box;
 	border: 1px solid var(--debug-color);
 }
 

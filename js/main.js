@@ -11,6 +11,7 @@ class Layer {
 		this.element.appendChild(this.canvas);
 
 		this.glowCanvas = document.createElement("canvas");
+		this.glowCanvas.classList.add("glow");
 		this.glowContext = this.glowCanvas.getContext("2d");
 		this.element.appendChild(this.glowCanvas);
 
@@ -32,6 +33,24 @@ class Layer {
 	}
 }
 
+const [width, height] = [512, 342];
+scene.style.setProperty("--width", width);
+scene.style.setProperty("--height", height);
+
 const sky = new Layer("sky");
-sky.setSize(800, 600);
+sky.setSize(width, height);
 scene.appendChild(sky.element);
+
+for (let i = 0; i < 1000; i++) {
+	const [r, g, b] = [
+		Math.floor(Math.random() * 0xFF), 
+		Math.floor(Math.random() * 0xFF), 
+		Math.floor(Math.random() * 0xFF), 
+	];
+	sky.context.fillStyle = `rgb(${r},${g},${b})`;
+	const x = Math.floor(Math.random() * width);
+	const randomY = 1 - Math.random() ** 0.5;
+	const y = Math.floor(randomY * height);
+	sky.context.fillRect(x, y, 1, 1);
+}
+sky.glowContext.drawImage(sky.canvas, 0, 0);
