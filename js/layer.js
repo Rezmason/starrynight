@@ -3,6 +3,7 @@ export default class Layer {
 		this.id = id;
 		this.element = document.createElement("layer");
 		this.element.id = id;
+		this.style = this.element.style;
 
 		this.canvas = document.createElement("canvas");
 		this.context = this.canvas.getContext("2d");
@@ -21,12 +22,18 @@ export default class Layer {
 		this.canvas.height = height;
 		this.glowCanvas.width = width;
 		this.glowCanvas.height = height;
-		this.element.style.setProperty("--width", width);
-		this.element.style.setProperty("--height", height);
+		this.style.setProperty("--width", width);
+		this.style.setProperty("--height", height);
 	}
 
 	setVisible(visible) {
 		this.visible = visible;
-		this.element.style.setProperty("visibility", visible ? "visible" : "hidden");
+		this.style.setProperty("visibility", visible ? "visible" : "hidden");
+	}
+
+	setPosition(x, y, flip = 1) {
+		this.style.setProperty("--x", x);
+		this.style.setProperty("--y", y);
+		this.style.setProperty("--flip", flip);
 	}
 };

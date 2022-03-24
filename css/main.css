@@ -19,11 +19,20 @@ scene {
 	--unit: 0.1em;
 	background: black;
 	position: relative;
-	/*overflow: hidden;*/
+	overflow: hidden;
 }
 
 scene layer {
 	position: absolute;
+	transform: 
+		translate(
+			calc(var(--x) * var(--unit)),
+			calc(var(--y) * var(--unit))
+		)
+		scale(
+			var(--flip),
+			1
+		);
 }
 
 scene canvas {
@@ -45,4 +54,5 @@ scene canvas.glow {
 
 
 
-layer#sky { --debug-color: blue; }
+/*layer#sky { --debug-color: blue; }*/
+/*layer#meteor { --debug-color: yellow; }*/
