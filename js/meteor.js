@@ -1,4 +1,4 @@
-import { milliseconds, frames } from "./utils.js";
+import { milliseconds, frames } from "./lapse.js";
 import Layer from "./layer.js";
 
 export default async (scene, width, height) => {
