@@ -19,7 +19,7 @@ export default async (state) => {
 	for (let row = 0; row < numRows; row++) {
 		for (let column = 0; column < numColumns; column++) {
 			context.globalCompositeOperation = "source-over";
-			context.fillStyle = "red";
+			context.fillStyle = "hsl(20, 100%, 60%)";
 			context.fillRect(0, 0, meteorWidth, meteorHeight);
 			context.globalCompositeOperation = "destination-atop";
 			context.drawImage(spritesheet, 
@@ -36,22 +36,22 @@ export default async (state) => {
 	meteor.setGlow(0.5);
 	meteor.setVisible(false);
 
-		const delay = Math.min(Math.floor((1 - Math.pow(Math.random(), 0.2)) * 5000), 3500);
 	while (state.running) {
+		const delay = 500 + Math.min(Math.floor((1 - Math.pow(Math.random(), 0.2)) * 5000), 3000);
 		await milliseconds(delay);
 		let x = Math.floor(Math.random() * width);
 		let y = Math.floor(Math.random() * height * 0.5);
 		const flip = Math.random() < 0.5 ? -1 : 1;
 		meteor.setVisible(true);
-		for (let i = 0; i < 18; i++) {
+		for (let i = 0; i < 14; i++) {
 			const index = Math.floor(Math.random() * numFrames);
 			meteor.context.putImageData(meteorFrames[index], 0, 0);
 			meteor.glowContext.putImageData(meteorFrames[index], 0, 0);
 			meteor.setPosition(x, y, flip);
 			await frames(1);
 
-			x += 14 * flip;
-			y += 10;
+			x += 21 * flip;
+			y += 15;
 		}
 		meteor.setVisible(false);
 	}
