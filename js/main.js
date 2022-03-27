@@ -9,6 +9,7 @@ const scene = document.querySelector("scene");
 scene.style.setProperty("--width", width);
 scene.style.setProperty("--height", height);
 
-animateSky(scene, width, height);
-animateMeteor(scene, width, height);
-animateBuildings(scene, width, height);
+const state = {scene, width, height, running: true};
+animateSky(state);
+animateMeteor(state);
+animateBuildings(state);

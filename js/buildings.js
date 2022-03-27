@@ -1,7 +1,9 @@
 import { milliseconds, frames } from "./lapse.js";
 import Layer from "./layer.js";
 
-const animateBuilding = async (scene, width, height, index, depth) => {
+const animateBuilding = async (state, index, depth) => {
+	const {scene, width, height} = state;
+
 	const windowWidth = Math.floor(Math.random() * 4) + 1;
 	const windowHeight = Math.floor(Math.random() * 5) + 2;
 	const windowGap = Math.floor(Math.random() * 2) + 1;
@@ -10,6 +12,7 @@ const animateBuilding = async (scene, width, height, index, depth) => {
 	const floorGap = Math.floor(Math.random() * 5) + 2;
 	const numFloors = Math.floor(Math.random() * 30) + 3;
 	const roofHeight = Math.floor(Math.random() * 30) + 3;
+
 	const buildingWidth = 
 		floorMargin * 2
 		+ numFloorWindows * windowWidth
@@ -51,7 +54,7 @@ const animateBuilding = async (scene, width, height, index, depth) => {
 		drawWindow(i);
 	}
 	
-	while (true) {
+	while (state.running) {
 		const delay = Math.min(Math.floor((1 - Math.pow(Math.random(), 0.2)) * 2000), 1000);
 		await milliseconds(delay);
 		const index = Math.floor(Math.random() * numWindows);
@@ -59,10 +62,10 @@ const animateBuilding = async (scene, width, height, index, depth) => {
 	}
 };
 
-export default async (scene, width, height) => {
+export default async (state) => {
 	const buildings = [];
 	const numBuildings = 10;
 	for (let i = 0; i < numBuildings; i++) {
-		animateBuilding(scene, width, height, i, (i + 1) / (numBuildings + 1));
+		animateBuilding(state, i, (i + 1) / (numBuildings + 1));
 	}
 };

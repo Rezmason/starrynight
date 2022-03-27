@@ -1,7 +1,8 @@
 import { milliseconds, frames } from "./lapse.js";
 import Layer from "./layer.js";
 
-export default async (scene, width, height) => {
+export default async (state) => {
+	const {scene, width, height} = state;
 	const meteor = new Layer("meteor");
 	scene.appendChild(meteor.element);
 	
@@ -35,8 +36,8 @@ export default async (scene, width, height) => {
 	meteor.setGlow(0.5);
 	meteor.setVisible(false);
 
-	while (true) {
 		const delay = Math.min(Math.floor((1 - Math.pow(Math.random(), 0.2)) * 5000), 3500);
+	while (state.running) {
 		await milliseconds(delay);
 		let x = Math.floor(Math.random() * width);
 		let y = Math.floor(Math.random() * height * 0.5);

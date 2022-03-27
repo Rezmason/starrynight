@@ -1,11 +1,12 @@
 import { frames } from "./lapse.js";
 import Layer from "./layer.js";
 
-export default async (scene, width, height) => {
+export default async (state) => {
+	const {scene, width, height} = state;
 	const sky = new Layer("sky");
 	sky.setSize(width, height);
 	scene.appendChild(sky.element);
-	while (true) {
+	while (state.running) {
 		if (Math.random() < 0.215) {
 			const [r, g, b] = [
 				Math.floor(Math.random() * 0xFF), 
