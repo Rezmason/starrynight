@@ -75,10 +75,10 @@ const animateBuilding = async (state, index, depth) => {
 
 	for (const floor of windowsByFloor) {
 		const lit = Math.random() < 0.5;
-		const start = randomInt(numWindowsPerFloor / 2, 0);
-		const end = randomInt(numWindowsPerFloor - (start + 2), (start + 2));
+		const litWidth = randomInt(numWindowsPerFloor, 3);
+		const litOffset = randomInt(numWindowsPerFloor, 0);
 		for (let i = 0; i < numWindowsPerFloor; i++) {
-			drawWindow(floor[i], lit && i >= start && i < end);
+			drawWindow(floor[i], lit && Math.abs(i - litOffset) < litWidth / 2);
 		}
 	}
 
