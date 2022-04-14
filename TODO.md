@@ -1,0 +1,24 @@
+#TODO
+
+- Copy-paste stuff from Matrix project (or a regl sample project)
+- Strategy
+	- All blurring and glowing will be done in a bloom post process
+	- Everything I'm drawing is a color quad
+		- Except the meteor, which is a textured, tinted quad
+	- Animate the meteor last
+	- Stars: a mesh containing the max number of stars, that you only draw some of
+		- To add a star: assign its position and color to an already existing mesh
+		- To remove a star: swap it with the last one and draw to a lower index
+	- Buildings
+		- Observation: Every window and silhouette *already exists*
+		- Idea 1: Create building mesh of opaque z-sorted rectangles and colors
+			- To light up or dim a window: set its state to "on" or "off"
+		- Idea 2: Create building mesh of isometric objects
+			- This would actually work the exact same
+			- Silhouettes would be an "X" of two interior opaque quads
+			- Windows would wrap around them
+- rotate the stars around the earth's axis?
+	- add a 2D transform matrix
+- rotate the buildings as an isometric 3D thing?
+	- 3D building geometry is a must
+	- Add a 3D transform matrix
