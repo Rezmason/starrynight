@@ -76,7 +76,7 @@ export default ({ regl, config }, inputs) => {
 		},
 		() => {
 
-			// mat4.rotateZ(turn, turn, Math.PI * 0.001);
+			mat4.rotateZ(turn, turn, Math.PI * 0.001);
 
 			regl.clear({
 				depth: 1,

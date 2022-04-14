@@ -8,6 +8,8 @@ varying vec3 vColor;
 
 void main() {
 	vColor = aColor;
-	vec2 position = (aPosition - 0.5) * 2.0 + aCorner / screenSize;
-	gl_Position = turn * vec4(position, 0, 1);
+	vec4 position = vec4((aPosition - 0.5) * 2.0, 0, 1);
+	position = turn * position;
+	position.xy += aCorner / screenSize * 10.0;
+	gl_Position = position;
 }
